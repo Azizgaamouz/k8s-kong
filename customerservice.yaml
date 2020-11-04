@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: customer-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: customer-deployment
+  template:
+    metadata:
+      labels:
+        run: customer-deployment
+    spec:
+      containers:
+        - name: customerservices
+          image: azizg/customerservice:latest
+          resources:
+            limits: 
+              cpu: 100m
+              memory: 500Mi
+
+      imagePullSecrets: 
+        - name: regcred
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: customer-service
+spec:
+  selector:
+    run: customer-deployment
+  ports:
+    - port: 80
